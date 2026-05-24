@@ -1,0 +1,13 @@
+[Unit]
+Description=Smart Speaker WiFi Setup Web Server
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /opt/wifi/flask_app.py
+WorkingDirectory=/opt/wifi
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target
