@@ -1,0 +1,9 @@
+[Unit]
+Description=Smart Speaker WiFi Provisioning Job
+After=NetworkManager.service
+Wants=NetworkManager.service
+
+[Service]
+Type=oneshot
+ExecStart=/opt/wifi/provision_worker.sh
+WorkingDirectory=/opt/wifi
