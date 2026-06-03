@@ -47,3 +47,14 @@ write_status() {
 read_status() {
     cat "$BT_STATUS_FILE" 2>/dev/null || printf '%s\n' "$BT_STATE_IDLE"
 }
+
+run_bt_command() {
+    local output
+
+    output="$(bluetoothctl "$@" 2>&1)" || {
+        printf '%s\n' "$output"
+        fail "bluetoothctl command failed: $*"
+    }
+
+    printf '%s\n' "$output"
+}

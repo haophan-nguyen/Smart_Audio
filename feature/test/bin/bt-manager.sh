@@ -28,8 +28,8 @@ Usage:
   sudo $0 <command>
 
 Commands:
-  init        Initialize Bluetooth service and audio state
-  pair        Enable pairing mode for a limited time
+  init       Initialize Bluetooth service and audio state
+  pair       Enable pairing mode for a limited time
   reconnect  Reconnect to the last known device
   status     Show Bluetooth and audio status
   switch     Run switch mode
@@ -47,10 +47,10 @@ ensure_bluetooth_service() {
     log "Checking Bluetooth service."
 
     if systemctl is-active --quiet bluetooth; then
-        log "Bluetooth service is already running."
+        info "Bluetooth service is already running"
     else
-        log "Starting Bluetooth service."
-        systemctl start bluetooth || fail "Could not start Bluetooth service."
+        info "Starting Bluetooth service"
+        systemctl start bluetooth || fail "Could not start Bluetooth service"
     fi
 }
 
@@ -59,7 +59,6 @@ init_flow() {
 
     if "$BT_INIT_SCRIPT"; then
         info "Init Bluetooth successfully"
-        write_status "$BT_STATE_IDLE"
         return 0
     else
         error "Init Bluetooth failed"
