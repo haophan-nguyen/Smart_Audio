@@ -1,11 +1,12 @@
 [Unit]
-Description=SmartAudio Bluetooth Adapter Configuration
-After=bluetooth.service
+Description=SmartAudio Bluetooth Manager
+After=bluetooth.service smart-speaker-bluetooth-agent.service
 Requires=bluetooth.service
+Wants=smart-speaker-bluetooth-agent.service
 
 [Service]
 Type=oneshot
-ExecStart=/opt/bluetooth/bluetooth_manager.sh
+ExecStart=/opt/bluetooth/bin/bt-manager.sh init
 RemainAfterExit=yes
 
 [Install]
