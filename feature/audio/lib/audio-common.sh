@@ -27,10 +27,10 @@ readonly AUDIO_EXIT_NO_BT_SOURCE=12
 readonly AUDIO_EXIT_NO_LOOPBACK=13
 
 # 4. Common paths and patterns
-readonly AUDIO_STATUS_FILE="${AUDIO_STATUS_FILE:-/run/smart-speaker-audio-status}"
+readonly AUDIO_STATUS_FILE="${XDG_RUNTIME_DIR:-/tmp}/smart-speaker-audio-status"
 readonly WM8960_SINK_PATTERN="${WM8960_SINK_PATTERN:-platform-soc_sound}"
 readonly BT_SOURCE_PATTERN="${BT_SOURCE_PATTERN:-bluez_source.*a2dp_source}"
-readonly LOOPBACK_LATENCY_MS="${LOOPBACK_LATENCY_MS:-500}"
+readonly LOOPBACK_LATENCY_MS="${LOOPBACK_LATENCY_MS:-300}"
 readonly OUTPUT_VOLUME="${OUTPUT_VOLUME:-60%}"
 
 # 5. Log helpers
@@ -103,5 +103,16 @@ is_loopback_configured()
         | grep -F "module-loopback" \
         | grep -F "source=$bt_source" \
         | grep -F "sink=$wm8960_sink" \
+        >/dev/null 2>&1
+}
+
+is_bt_loopback_exists()
+{
+    local bt_source="$1"
+
+    pactl list short modules 2>/dev/null \
+        | awk '$2 == "module-loopback" {print}' \
+        | grep -F "source=" \
+        | grep -F "$bt_source" \
         >/dev/null 2>&1
 }

@@ -90,22 +90,35 @@ set_default_sink()
 # 6. Function: setup_loopback()
 setup_loopback()
 {
-    require_wm8960_sink || return 1
-    require_bt_source || return 1
+    local bt_source
+    local wm8960_sink
 
-    if is_loopback_configured "$BT_SOURCE" "$WM8960_SINK"; then
-        info "Loopback is already configured"
+    bt_source="$(get_bt_a2dp_source)" || true
+    if [[ -z "$bt_source" ]]; then
+        warn "Bluetooth A2DP source not found"
+        write_status "$AUDIO_STATE_NO_BT_SOURCE"
+        return 1
+    fi
+
+    wm8960_sink="$(get_wm8960_sink)" || true
+    if [[ -z "$wm8960_sink" ]]; then
+        error "WM8960 sink not found"
+        write_status "$AUDIO_STATE_NO_SINK"
+        return 1
+    fi
+
+    if is_bt_loopback_exists "$bt_source"; then
+        info "Bluetooth loopback already exists. Do not create duplicate loopback."
         return 0
     fi
 
-    info "Creating loopback"
-    info "  source: $BT_SOURCE"
-    info "  sink  : $WM8960_SINK"
-    info "  latency_msec: $LOOPBACK_LATENCY_MS"
+    info "Creating loopback..."
+    info "Source: $bt_source"
+    info "Sink  : $wm8960_sink"
 
     pactl load-module module-loopback \
-        source="$BT_SOURCE" \
-        sink="$WM8960_SINK" \
+        source="$bt_source" \
+        sink="$wm8960_sink" \
         latency_msec="$LOOPBACK_LATENCY_MS" \
         adjust_time=0 \
         >/dev/null || {
@@ -115,7 +128,6 @@ setup_loopback()
         }
 
     info "Loopback created successfully"
-    write_status "$AUDIO_STATE_CONFIGURED"
     return 0
 }
 

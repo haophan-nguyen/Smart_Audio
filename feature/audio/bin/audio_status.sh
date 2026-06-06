@@ -64,12 +64,12 @@ show_default_sink()
 # 6. Function: check_loopback()
 check_loopback()
 {
-    if is_loopback_configured "$BT_SOURCE" "$WM8960_SINK"; then
-        info "Loopback is already configured"
+    if is_bt_loopback_exists "$BT_SOURCE"; then
+        info "Bluetooth loopback exists"
         return 0
     fi
 
-    warn "Loopback is not configured"
+    warn "Bluetooth loopback is not configured"
     return 1
 }
 
