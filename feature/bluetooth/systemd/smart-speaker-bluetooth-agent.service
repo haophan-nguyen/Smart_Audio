@@ -1,12 +1,11 @@
 [Unit]
 Description=SmartAudio Bluetooth Pairing Agent
-After=bluetooth.service smart-speaker-bluetooth.service
+After=bluetooth.service
 Requires=bluetooth.service
-Wants=smart-speaker-bluetooth.service
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3 -u /opt//bluetooth/bluetooth_agent.py
+ExecStart=/usr/bin/python3 -u /opt/bluetooth/agent/bluetooth_agent.py
 Restart=on-failure
 RestartSec=2
 
